@@ -6,8 +6,9 @@ elif [ -f .orxpm/remote ]; then
     REMOTE=$(cat .orxpm/remote)
     echo "Using the previous package repository: $REMOTE"
 else
-    >&2 echo "Please provide a remote repository address as the first argument"
-    exit 1
+    DEFAULT_REMOTE='https://github.com/orx/orxhub.git'
+    echo "Using the default remote: $DEFAULT_REMOTE"
+    REMOTE=$DEFAULT_REMOTE
 fi
 
 mkdir -p .orxpm/workbench
