@@ -1,0 +1,47 @@
+cmake_minimum_required (VERSION 2.6)
+project(game)
+
+if (NOT CMAKE_BUILD_TYPE)
+  message(STATUS "No build type selected, default to Release")
+  set(CMAKE_BUILD_TYPE "Release")
+endif()
+
+set ( CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
+find_package ( ORX )
+
+IF(CMAKE_COMPILER_IS_GNUCXX)
+  SET (CMAKE_CXX_COMPILER_ARG1 -std=c++11)
+ELSE()
+  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE .)
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG .)
+  file(COPY ${ORX_DLLS} DESTINATION .)
+ENDIF (CMAKE_COMPILER_IS_GNUCXX)
+
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DNDEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D__orxDEBUG__")
+
+include_directories(
+    ${ORX_INCLUDE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+file (GLOB_RECURSE COMMON_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} common/*.cpp common/*.c)
+file (GLOB_RECURSE DESKTOP_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} desktop/*.cpp desktop/*.c)
+file (GLOB_RECURSE ORXPM_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} orxpm/*.cpp orxpm/*.c)
+file (GLOB_RECURSE LIB_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} lib/*.cpp lib/*.c)
+
+set(GAME_SRCS
+    ${COMMON_SRCS}
+    ${DESKTOP_SRCS}
+    ${ORXPM_SRCS}
+    ${LIB_SRCS}
+)
+
+configure_file(cmake/execute_in_sibling_folder.ini ${CMAKE_PROJECT_NAME}.ini COPYONLY)
+
+add_executable(${CMAKE_PROJECT_NAME} ${GAME_SRCS})
+
+target_link_libraries (${CMAKE_PROJECT_NAME} ${ORX_LIBRARY})
