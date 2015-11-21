@@ -1,2 +1,3 @@
+RegisterAnimGraphCommands();
 
 
