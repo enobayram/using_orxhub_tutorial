@@ -6,6 +6,9 @@ orxSTATUS orxFASTCALL Init()
 {
   orxPM_Init();
 
+  orxViewport_CreateFromConfig("MainViewport");
+  orxObject_CreateFromConfig("Soldier");
+
   return orxSTATUS_SUCCESS;
 }
 
@@ -13,6 +16,8 @@ orxSTATUS orxFASTCALL Init()
 orxSTATUS orxFASTCALL Run()
 {
   orxPM_Run();
+
+  if(orxInput_IsActive("Quit")) return orxSTATUS_FAILURE;
 
   return orxSTATUS_SUCCESS;
 }
